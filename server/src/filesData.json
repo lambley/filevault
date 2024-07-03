@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "name": "Document1",
+    "key": "document1.pdf"
+  },
+  {
+    "name": "Image2",
+    "key": "image2.jpg"
+  },
+  {
+    "name": "Presentation3",
+    "key": "presentation3.pptx"
+  }
+]
