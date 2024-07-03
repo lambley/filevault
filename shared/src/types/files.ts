@@ -3,4 +3,4 @@ interface FileMetadata {
   key: string;
 }
 
-export { FileMetadata }
+export type { FileMetadata };

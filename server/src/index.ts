@@ -7,7 +7,7 @@ import {
   BlobServiceClient,
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
-import { FileMetadata } from "./types";
+import { FileMetadata } from "@shared/types/files";
 
 dotenv.config();
 const app = express();
