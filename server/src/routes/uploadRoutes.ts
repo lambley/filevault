@@ -1,0 +1,75 @@
+import express from "express";
+import multer from "multer";
+import fs from "fs";
+import dotenv from "dotenv";
+import path from "path";
+import {
+  BlobServiceClient,
+  StorageSharedKeyCredential,
+} from "@azure/storage-blob";
+import { FileMetadata } from "@shared/types/files";
+
+dotenv.config();
+
+const router = express.Router();
+const upload = multer({ dest: "uploads/" });
+
+const sharedKeyCredential = new StorageSharedKeyCredential(
+  process.env.AZURE_STORAGE_ACCOUNT_NAME!,
+  process.env.AZURE_STORAGE_ACCOUNT_KEY!
+);
+
+const blobServiceClient = new BlobServiceClient(
+  `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net`,
+  sharedKeyCredential
+);
+
+const containerClient = blobServiceClient.getContainerClient(
+  process.env.AZURE_CONTAINER_NAME!
+);
+
+const filesDataPath = path.join(__dirname, "../filesData.json");
+
+const loadFilesData = (): FileMetadata[] => {
+  if (fs.existsSync(filesDataPath)) {
+    const data = fs.readFileSync(filesDataPath);
+    return JSON.parse(data.toString()) as FileMetadata[];
+  } else {
+    return [];
+  }
+};
+
+const saveFilesData = (files: FileMetadata[]) => {
+  fs.writeFileSync(filesDataPath, JSON.stringify(files, null, 2));
+};
+
+let files: FileMetadata[] = loadFilesData();
+
+router.post("/", upload.single("file"), async (req, res) => {
+  const fileName = req.body.note as string;
+  if (!fileName) {
+    return res.status(400).send("File name is required.");
+  }
+
+  if (req.file) {
+    try {
+      const blobName = req.file.filename;
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+      await blockBlobClient.uploadFile(req.file.path);
+      fs.unlinkSync(req.file.path); // remove the file locally after upload
+
+      files.push({ name: fileName, key: blobName });
+      saveFilesData(files);
+
+      res.status(200).send("File uploaded successfully.");
+    } catch (err) {
+      console.error("Error uploading file:", err);
+      res.status(500).send("Failed to upload file.");
+    }
+  } else {
+    res.status(400).send("No file uploaded.");
+  }
+});
+
+export default router;
