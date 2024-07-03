@@ -8,7 +8,7 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 import { FileMetadata } from "@shared/types/files";
-import cors from 'cors';
+import cors from "cors";
 
 dotenv.config();
 const app = express();
@@ -31,6 +31,7 @@ const containerClient = blobServiceClient.getContainerClient(
 );
 
 const filesDataPath = "./filesData.json";
+console.log(filesDataPath);
 
 const loadFilesData = (): FileMetadata[] => {
   if (fs.existsSync(filesDataPath)) {
@@ -46,7 +47,7 @@ const saveFilesData = (files: FileMetadata[]) => {
 
 let files: FileMetadata[] = loadFilesData();
 
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ["http://localhost:3000"];
 const corsOptions: cors.CorsOptions = {
   origin: allowedOrigins,
 };
@@ -103,6 +104,22 @@ app.delete("/files/:key", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+process.on("SIGINT", () => {
+  console.log("SIGINT received: shutting down server...");
+  server.close(() => {
+    console.log("Server has been gracefully terminated");
+    process.exit(0);
+  });
+});
+
+process.on("SIGTERM", () => {
+  console.log("SIGTERM received: shutting down server...");
+  server.close(() => {
+    console.log("Server has been gracefully terminated");
+    process.exit(0);
+  });
 });
