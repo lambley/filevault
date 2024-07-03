@@ -8,6 +8,7 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 import { FileMetadata } from "@shared/types/files";
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
@@ -45,6 +46,12 @@ const saveFilesData = (files: FileMetadata[]) => {
 
 let files: FileMetadata[] = loadFilesData();
 
+const allowedOrigins = ['http://localhost:3000'];
+const corsOptions: cors.CorsOptions = {
+  origin: allowedOrigins,
+};
+
+app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
