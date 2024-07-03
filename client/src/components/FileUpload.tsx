@@ -1,4 +1,6 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import axiosInstance from '../axiosInstance';
+import FileTable from './FileTable';
 
 interface FileMetadata {
   name: string;
@@ -32,46 +34,45 @@ const FileUpload: React.FC = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await axiosInstance.post('/upload', formData);
 
-      if (response.ok) {
+      if (response.status === 200) {
         alert('File uploaded successfully!');
         setNote('');
         setFile(null);
         setError(null);
         loadFiles();
       } else {
-        const errorMessage = await response.text();
-        setError(errorMessage || 'Failed to upload file.');
+        setError(response.data || 'Failed to upload file.');
       }
     } catch (err) {
+      console.error('Error uploading file:', err);
       setError('Failed to upload file.');
     }
   };
 
   const loadFiles = async () => {
-    const response = await fetch('/files');
-    const files = await response.json();
-    setFiles(files);
+    try {
+      const response = await axiosInstance.get('/files');
+      setFiles(response.data);
+    } catch (error) {
+      console.error('Error loading files:', error);
+      setError('Failed to load files.');
+    }
   };
 
   const deleteFile = async (fileKey: string) => {
     try {
-      const response = await fetch(`/files/${fileKey}`, {
-        method: 'DELETE',
-      });
+      const response = await axiosInstance.delete(`/files/${fileKey}`);
 
-      if (response.ok) {
+      if (response.status === 200) {
         alert('File deleted successfully!');
         loadFiles();
       } else {
-        const errorMessage = await response.text();
-        setError(errorMessage || 'Failed to delete file.');
+        setError(response.data || 'Failed to delete file.');
       }
     } catch (err) {
+      console.error('Error deleting file:', err);
       setError('Failed to delete file.');
     }
   };
@@ -97,28 +98,7 @@ const FileUpload: React.FC = () => {
         <button type="submit">Submit</button>
       </form>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div id="notesList">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>File Key</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {files.map(file => (
-              <tr key={file.key}>
-                <td>{file.name}</td>
-                <td>{file.key}</td>
-                <td>
-                  <button onClick={() => deleteFile(file.key)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <FileTable files={files} deleteFile={deleteFile} />
     </main>
   );
 };
