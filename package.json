@@ -4,7 +4,13 @@
   "scripts": {
     "start:server": "cd server && npm run dev",
     "start:client": "cd client && npm start",
-    "start": "concurrently \"npm run start:server\" \"npm run start:client\""
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "test:client": "cd client && npm test",
+    "test:server": "cd server && npm test",
+    "test": "concurrently \"npm run test:client\" \"npm run test:server\"",
+    "test:watch:client": "cd client && npm run test:watch",
+    "test:watch:server": "cd server && npm run test:watch",
+    "test:watch": "concurrently \"npm run test:watch:client\" \"npm run test:watch:server\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
