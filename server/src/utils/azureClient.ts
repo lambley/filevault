@@ -14,10 +14,14 @@ class AzureBlobService {
   private accountKey: string;
   private containerName: string;
 
-  constructor() {
-    this.accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME!;
-    this.accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY!;
-    this.containerName = process.env.AZURE_CONTAINER_NAME!;
+  constructor(
+    accountName: string = process.env.AZURE_STORAGE_ACCOUNT_NAME!,
+    accountKey: string = process.env.AZURE_STORAGE_ACCOUNT_KEY!,
+    containerName: string = process.env.AZURE_CONTAINER_NAME!
+  ) {
+    this.accountName = accountName;
+    this.accountKey = accountKey;
+    this.containerName = containerName;
   }
 
   public async initialize() {
