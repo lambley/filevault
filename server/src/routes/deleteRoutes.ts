@@ -1,5 +1,5 @@
 import express from "express";
-import { containerClient } from "../utils/azureClient";
+import azureBlobService from "../utils/azureClient";
 import { loadFilesData, saveFilesData } from "../utils/fileUtils";
 import { FileMetadata } from "@shared/types/files";
 
@@ -11,6 +11,12 @@ router.delete("/:key", async (req, res) => {
   const fileKey = req.params.key as string;
 
   try {
+    const containerClient = azureBlobService.getContainerClient();
+
+    if (!containerClient) {
+      throw new Error("Container client not initialized.");
+    }
+
     const blockBlobClient = containerClient.getBlockBlobClient(fileKey);
     await blockBlobClient.delete();
 

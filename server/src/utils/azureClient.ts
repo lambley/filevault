@@ -7,52 +7,72 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-let blobServiceClient: BlobServiceClient | null = null;
-let containerClient: ContainerClient = {} as ContainerClient;
+class AzureBlobService {
+  private blobServiceClient: BlobServiceClient | null = null;
+  private containerClient: ContainerClient | null = null;
+  private accountName: string;
+  private accountKey: string;
+  private containerName: string;
 
-const initializeAzureClient = async () => {
-  try {
-    const sharedKeyCredential = new StorageSharedKeyCredential(
-      process.env.AZURE_STORAGE_ACCOUNT_NAME!,
-      process.env.AZURE_STORAGE_ACCOUNT_KEY!
-    );
-
-    blobServiceClient = new BlobServiceClient(
-      `https://${process.env.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net`,
-      sharedKeyCredential
-    );
-
-    await listContainers();
-
-    containerClient = blobServiceClient.getContainerClient(
-      process.env.AZURE_CONTAINER_NAME!
-    );
-
-    console.log("Azure client initialized successfully.");
-  } catch (error) {
-    console.error("Failed to initialize Azure client:", error);
-    blobServiceClient = null;
-    containerClient = {} as ContainerClient;
-    throw error;
+  constructor() {
+    this.accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME!;
+    this.accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY!;
+    this.containerName = process.env.AZURE_CONTAINER_NAME!;
   }
-};
 
-const listContainers = async () => {
-  try {
-    if (blobServiceClient) {
-      const iter = blobServiceClient.listContainers();
-      for await (const container of iter) {
-        console.log("Container:", container.name);
-      }
+  public async initialize() {
+    try {
+      const sharedKeyCredential = new StorageSharedKeyCredential(
+        this.accountName,
+        this.accountKey
+      );
+
+      this.blobServiceClient = new BlobServiceClient(
+        `https://${this.accountName}.blob.core.windows.net`,
+        sharedKeyCredential
+      );
+
+      await this.listContainers();
+
+      this.containerClient = this.blobServiceClient.getContainerClient(
+        this.containerName
+      );
+
+      console.log("Azure client initialized successfully.");
+    } catch (error) {
+      console.error("Failed to initialize Azure client:", error);
+      this.blobServiceClient = null;
+      this.containerClient = null;
+      throw error;
     }
-  } catch (error) {
-    console.error("Error validating Azure connection:", error);
-    throw error;
   }
-};
 
-initializeAzureClient().catch((error) => {
+  private async listContainers() {
+    try {
+      if (this.blobServiceClient) {
+        const iter = this.blobServiceClient.listContainers();
+        for await (const container of iter) {
+          console.log("Container:", container.name);
+        }
+      }
+    } catch (error) {
+      console.error("Error validating Azure connection:", error);
+      throw error;
+    }
+  }
+
+  public getContainerClient(): ContainerClient | null {
+    return this.containerClient;
+  }
+
+  public getBlobServiceClient(): BlobServiceClient | null {
+    return this.blobServiceClient;
+  }
+}
+
+const azureBlobService = new AzureBlobService();
+azureBlobService.initialize().catch((error) => {
   console.error("Azure client initialization error:", error);
 });
 
-export { blobServiceClient, containerClient };
+export default azureBlobService;

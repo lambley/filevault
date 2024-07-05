@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import fs from "fs";
-import { containerClient } from "../utils/azureClient";
+import azureBlobService from "../utils/azureClient"; // Import the class instance
 import { loadFilesData, saveFilesData } from "../utils/fileUtils";
 import { FileMetadata } from "@shared/types/files";
 
@@ -18,11 +18,17 @@ router.post("/", upload.single("file"), async (req, res) => {
 
   if (req.file) {
     try {
+      const containerClient = azureBlobService.getContainerClient();
+
+      if (!containerClient) {
+        throw new Error("Container client not initialized.");
+      }
+
       const blobName = req.file.filename;
       const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
       await blockBlobClient.uploadFile(req.file.path);
-      fs.unlinkSync(req.file.path); // remove the file locally after upload
+      fs.unlinkSync(req.file.path);
 
       files.push({ name: fileName, key: blobName });
       saveFilesData(files);

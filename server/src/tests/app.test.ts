@@ -1,9 +1,10 @@
 import request from "supertest";
 import app from "../app";
-import * as azureClient from "../utils/azureClient";
+import azureBlobService from "../utils/azureClient";
 
 jest.mock("../utils/azureClient", () => ({
-  blobServiceClient: {
+  __esModule: true,
+  default: {
     getContainerClient: jest.fn().mockReturnValue({
       getBlockBlobClient: jest.fn().mockReturnValue({
         uploadFile: jest.fn().mockResolvedValue({}),
@@ -11,20 +12,21 @@ jest.mock("../utils/azureClient", () => ({
       }),
       listBlobsFlat: jest.fn().mockResolvedValue({
         byPage: jest.fn().mockReturnValue({
-          next: jest.fn().mockResolvedValue({ value: { segment: { blobItems: [] } } })
-        })
-      })
+          next: jest
+            .fn()
+            .mockResolvedValue({ value: { segment: { blobItems: [] } } }),
+        }),
+      }),
     }),
-  },
-  containerClient: {
-    getBlockBlobClient: jest.fn().mockReturnValue({
-      uploadFile: jest.fn().mockResolvedValue({}),
-      delete: jest.fn().mockResolvedValue({}),
-    }),
+    initialize: jest.fn().mockResolvedValue(undefined),
   },
 }));
 
 describe("app.ts", () => {
+  beforeAll(async () => {
+    await azureBlobService.initialize();
+  });
+
   describe("CORS configuration", () => {
     it("should allow requests from allowed origins", async () => {
       const response = await request(app)
