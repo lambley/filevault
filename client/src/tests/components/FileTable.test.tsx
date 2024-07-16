@@ -1,6 +1,6 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import FileTable from "../../components/FileTable";
-import { FileMetadata } from "@shared/types/files";
+import { FileMetadata } from "../../../types/files";
 
 describe("FileTable", () => {
   const mockFiles: FileMetadata[] = [

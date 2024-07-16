@@ -1,9 +1,9 @@
 import express from "express";
 import multer from "multer";
 import fs from "fs";
-import azureBlobService from "../utils/azureClient"; // Import the class instance
+import azureBlobService from "../utils/azureClient"; 
 import { loadFilesData, saveFilesData } from "../utils/fileUtils";
-import { FileMetadata } from "@shared/types/files";
+import { FileMetadata } from "../../types/files";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });

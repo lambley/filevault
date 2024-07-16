@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileMetadata } from '@shared/types/files';
+import { FileMetadata } from '../../types/files';
 
 interface Props {
   files: FileMetadata[];

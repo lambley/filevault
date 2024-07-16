@@ -1,7 +1,7 @@
 import express from "express";
 import azureBlobService from "../utils/azureClient";
 import { loadFilesData, saveFilesData } from "../utils/fileUtils";
-import { FileMetadata } from "@shared/types/files";
+import { FileMetadata } from "../../types/files";
 
 const router = express.Router();
 

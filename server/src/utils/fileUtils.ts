@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { FileMetadata } from "@shared/types/files";
+import { FileMetadata } from "../../types/files";
 
 const filesDataPath = path.join(__dirname, "../filesData.json");
 
