@@ -1,6 +1,6 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-import axiosInstance from '../axiosInstance';
-import FileTable from './FileTable';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import axiosInstance from "../axiosInstance";
+import FileTable from "./FileTable";
 
 interface FileMetadata {
   name: string;
@@ -8,12 +8,13 @@ interface FileMetadata {
 }
 
 const FileUpload: React.FC = () => {
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [files, setFiles] = useState<FileMetadata[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const handleNoteChange = (e: ChangeEvent<HTMLInputElement>) => setNote(e.target.value);
+  const handleNoteChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setNote(e.target.value);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -25,39 +26,39 @@ const FileUpload: React.FC = () => {
     e.preventDefault();
 
     if (!note || !file) {
-      setError('Please enter a name for the file and select a file.');
+      setError("Please enter a name for the file and select a file.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('note', note);
-    formData.append('file', file);
+    formData.append("note", note);
+    formData.append("file", file);
 
     try {
-      const response = await axiosInstance.post('/upload', formData);
+      const response = await axiosInstance.post("/upload", formData);
 
       if (response.status === 200) {
-        alert('File uploaded successfully!');
-        setNote('');
+        alert("File uploaded successfully!");
+        setNote("");
         setFile(null);
         setError(null);
         loadFiles();
       } else {
-        setError(response.data || 'Failed to upload file.');
+        setError(response.data || "Failed to upload file.");
       }
     } catch (err) {
-      console.error('Error uploading file:', err);
-      setError('Failed to upload file.');
+      console.error("Error uploading file:", err);
+      setError("Failed to upload file.");
     }
   };
 
   const loadFiles = async () => {
     try {
-      const response = await axiosInstance.get('/files');
+      const response = await axiosInstance.get("/files");
       setFiles(response.data);
     } catch (error) {
-      console.error('Error loading files:', error);
-      setError('Failed to load files.');
+      console.error("Error loading files:", error);
+      setError("Failed to load files.");
     }
   };
 
@@ -66,14 +67,14 @@ const FileUpload: React.FC = () => {
       const response = await axiosInstance.delete(`/files/${fileKey}`);
 
       if (response.status === 200) {
-        alert('File deleted successfully!');
+        alert("File deleted successfully!");
         loadFiles();
       } else {
-        setError(response.data || 'Failed to delete file.');
+        setError(response.data || "Failed to delete file.");
       }
     } catch (err) {
-      console.error('Error deleting file:', err);
-      setError('Failed to delete file.');
+      console.error("Error deleting file:", err);
+      setError("Failed to delete file.");
     }
   };
 
@@ -93,11 +94,16 @@ const FileUpload: React.FC = () => {
           required
         />
         <br />
-        <input type="file" id="fileInput" onChange={handleFileChange} required />
+        <input
+          type="file"
+          id="fileInput"
+          onChange={handleFileChange}
+          required
+        />
         <br />
         <button type="submit">Submit</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <FileTable files={files} deleteFile={deleteFile} />
     </main>
   );
