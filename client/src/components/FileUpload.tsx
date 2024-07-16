@@ -97,6 +97,7 @@ const FileUpload: React.FC = () => {
         <input
           type="file"
           id="fileInput"
+          aria-label="choose file"
           onChange={handleFileChange}
           required
         />
