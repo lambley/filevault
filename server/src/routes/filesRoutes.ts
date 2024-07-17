@@ -1,7 +1,7 @@
 import express from 'express';
 import fs from 'fs';
 import path from "path";
-import { FileMetadata } from '@shared/types/files';
+import { FileMetadata } from '../../types/files';
 
 const router = express.Router();
 

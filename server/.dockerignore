@@ -1,0 +1,16 @@
+# Ignore editor-specific files
+.vscode/
+.idea/
+
+# Ignore build artifacts
+node_modules/
+dist/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore test files and directories
+**/*.test.ts
+**/__tests__/
+
