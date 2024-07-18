@@ -1,8 +1,9 @@
 import request from "supertest";
+import { Server } from "http";
 import app from "../app";
 
 describe("index.ts", () => {
-  let server: any;
+  let server: Server;
 
   beforeAll(() => {
     const port = 3001;
@@ -15,7 +16,13 @@ describe("index.ts", () => {
 
   describe("starting the server", () => {
     it("should start on given port", async () => {
-      expect(server.address().port).toEqual(3001);
+      expect(server.address()).toEqual(
+        expect.objectContaining({
+          address: expect.any(String),
+          family: expect.any(String),
+          port: 3001,
+        })
+      );
     });
   });
 

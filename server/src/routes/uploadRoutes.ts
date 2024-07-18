@@ -1,14 +1,14 @@
 import express from "express";
 import multer from "multer";
 import fs from "fs";
-import azureBlobService from "../utils/azureClient"; 
+import azureBlobService from "../utils/azureClient";
 import { loadFilesData, saveFilesData } from "../utils/fileUtils";
 import { FileMetadata } from "../../types/files";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
-let files: FileMetadata[] = loadFilesData();
+const files: FileMetadata[] = loadFilesData();
 
 router.post("/", upload.single("file"), async (req, res) => {
   const fileName = req.body.note as string;

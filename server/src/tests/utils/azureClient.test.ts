@@ -21,7 +21,7 @@ describe("azureClient", () => {
           exists: jest.fn().mockResolvedValue(true),
           createIfNotExists: jest.fn().mockResolvedValue({ created: true }),
         }),
-      } as any;
+      } as unknown as Azure.BlobServiceClient;
     });
   });
 

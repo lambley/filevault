@@ -26,10 +26,13 @@ describe("FileUpload", () => {
 
     await waitFor(() => {
       expect(screen.getByText("File 1")).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
       expect(screen.getByText("File 2")).toBeInTheDocument();
     });
   });
-
+  
   it("should show error if file name or file is not provided", async () => {
     render(<FileUpload />);
 

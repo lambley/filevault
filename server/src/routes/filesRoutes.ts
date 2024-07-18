@@ -15,7 +15,7 @@ const loadFilesData = (): FileMetadata[] => {
   return [];
 };
 
-let files: FileMetadata[] = loadFilesData();
+const files: FileMetadata[] = loadFilesData();
 
 router.get('/', (req, res) => {
   res.json(files);

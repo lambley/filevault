@@ -1,11 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { FileMetadata } from "@shared/types/files";
+import { FileMetadata } from "../../../types/files";
 import { loadFilesData, saveFilesData } from "../../utils/fileUtils";
 
 jest.mock("fs");
-
-const testFilesDataPath = path.resolve(__dirname, "../test-filesData.json");
 
 const testData: FileMetadata[] = [
   { name: "TestDocument1", key: "testDocument1.pdf" },
