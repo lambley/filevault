@@ -65,3 +65,18 @@ Before running the application, ensure you have the following installed:
     ```bash
     npm run start
     ```
+
+### Starting with Docker
+
+- There are 3 docker images:
+  - Server - NodeJS/TS API
+  - Client - ReactTS client
+  - Jenkins - for running Jenkins pipeline locally/on CI
+
+Build the containers with the following command from the root folder:
+```bash
+# enter command in the root folder
+docker-compose up --build
+```
+
+To access Jenkins, you would need to follow some setup. See their official docs [ [linux](https://www.jenkins.io/doc/book/installing/linux/) | [mac](https://www.jenkins.io/doc/book/installing/macos/) ].
