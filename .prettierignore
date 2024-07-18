@@ -1,0 +1,8 @@
+# Ignore node_modules in each main folder
+/node_modules
+/server/node_modules
+/client/node_modules
+
+# Ignore build and dist folders
+/build
+/dist

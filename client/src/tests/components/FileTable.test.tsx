@@ -1,22 +1,22 @@
-import { render, fireEvent, screen } from "@testing-library/react";
-import FileTable from "../../components/FileTable";
-import { FileMetadata } from "../../../types/files";
+import { render, fireEvent, screen } from '@testing-library/react';
+import FileTable from '../../components/FileTable';
+import { FileMetadata } from '../../../types/files';
 
-describe("FileTable", () => {
+describe('FileTable', () => {
   const mockFiles: FileMetadata[] = [
-    { name: "File 1", key: "key1" },
-    { name: "File 2", key: "key2" },
+    { name: 'File 1', key: 'key1' },
+    { name: 'File 2', key: 'key2' },
   ];
 
   const mockDeleteFile = jest.fn();
 
-  it("should render the correct number of rows", () => {
+  it('should render the correct number of rows', () => {
     render(<FileTable files={mockFiles} deleteFile={mockDeleteFile} />);
-    const rows = screen.getAllByRole("row");
+    const rows = screen.getAllByRole('row');
     expect(rows).toHaveLength(3);
   });
 
-  it("should display file names and keys", () => {
+  it('should display file names and keys', () => {
     render(<FileTable files={mockFiles} deleteFile={mockDeleteFile} />);
 
     mockFiles.forEach((file) => {
@@ -25,9 +25,9 @@ describe("FileTable", () => {
     });
   });
 
-  it("should call deleteFile when delete button is clicked", () => {
+  it('should call deleteFile when delete button is clicked', () => {
     render(<FileTable files={mockFiles} deleteFile={mockDeleteFile} />);
-    const deleteButtons = screen.getAllByText("Delete");
+    const deleteButtons = screen.getAllByText('Delete');
 
     deleteButtons.forEach((button, index) => {
       fireEvent.click(button);

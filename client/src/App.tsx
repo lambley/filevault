@@ -1,6 +1,6 @@
-import React from "react";
-import FileUpload from "./components/FileUpload";
-import ThemeToggle from "./components/ThemeToggle";
+import React from 'react';
+import FileUpload from './components/FileUpload';
+import ThemeToggle from './components/ThemeToggle';
 
 const App: React.FC = () => {
   return (

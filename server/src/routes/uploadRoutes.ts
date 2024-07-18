@@ -1,19 +1,19 @@
-import express from "express";
-import multer from "multer";
-import fs from "fs";
-import azureBlobService from "../utils/azureClient";
-import { loadFilesData, saveFilesData } from "../utils/fileUtils";
-import { FileMetadata } from "../../types/files";
+import express from 'express';
+import multer from 'multer';
+import fs from 'fs';
+import azureBlobService from '../utils/azureClient';
+import { loadFilesData, saveFilesData } from '../utils/fileUtils';
+import { FileMetadata } from '../../types/files';
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: 'uploads/' });
 
 const files: FileMetadata[] = loadFilesData();
 
-router.post("/", upload.single("file"), async (req, res) => {
+router.post('/', upload.single('file'), async (req, res) => {
   const fileName = req.body.note as string;
   if (!fileName) {
-    return res.status(400).send("File name is required.");
+    return res.status(400).send('File name is required.');
   }
 
   if (req.file) {
@@ -21,7 +21,7 @@ router.post("/", upload.single("file"), async (req, res) => {
       const containerClient = azureBlobService.getContainerClient();
 
       if (!containerClient) {
-        throw new Error("Container client not initialized.");
+        throw new Error('Container client not initialized.');
       }
 
       const blobName = req.file.filename;
@@ -33,13 +33,13 @@ router.post("/", upload.single("file"), async (req, res) => {
       files.push({ name: fileName, key: blobName });
       saveFilesData(files);
 
-      res.status(200).send("File uploaded successfully.");
+      res.status(200).send('File uploaded successfully.');
     } catch (err) {
-      console.error("Error uploading file:", err);
-      res.status(500).send("Failed to upload file.");
+      console.error('Error uploading file:', err);
+      res.status(500).send('Failed to upload file.');
     }
   } else {
-    res.status(400).send("No file uploaded.");
+    res.status(400).send('No file uploaded.');
   }
 });
 

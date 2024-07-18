@@ -13,13 +13,17 @@
     "test:watch": "concurrently \"npm run test:watch:client\" \"npm run test:watch:server\"",
     "lint:server": "eslint server --config ./eslintrc.json",
     "lint:client": "eslint client --config ./eslintrc.json",
-    "lint": "npm run lint:server && npm run lint:client"
+    "lint": "npm run lint:server && npm run lint:client",
+    "format:server": "prettier --write 'server/**/*.js' 'server/**/*.ts'",
+    "format:client": "prettier --write 'client/**/*.js' 'client/**/*.ts' 'client/**/*.tsx'",
+    "format": "npm run format:server && npm run format:client"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.16.1",
     "@typescript-eslint/parser": "^7.16.1",
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.34.4"
+    "eslint-plugin-react": "^7.34.4",
+    "prettier": "^3.3.3"
   }
 }

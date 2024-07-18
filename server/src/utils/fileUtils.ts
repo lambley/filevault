@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
-import { FileMetadata } from "../../types/files";
+import fs from 'fs';
+import path from 'path';
+import { FileMetadata } from '../../types/files';
 
-const filesDataPath = path.join(__dirname, "../filesData.json");
+const filesDataPath = path.join(__dirname, '../filesData.json');
 
 const loadFilesData = (): FileMetadata[] => {
   if (fs.existsSync(filesDataPath)) {
