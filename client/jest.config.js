@@ -8,5 +8,5 @@ module.exports = {
   setupFilesAfterEnv: ['./jest.setup.ts'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
-  coverageReporters: ['text'],
+  coverageReporters: ['text', 'json-summary'],
 };
