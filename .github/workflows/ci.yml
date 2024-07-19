@@ -58,7 +58,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           cd ${{ matrix.path }}
-          npm test -- --coverage
+          npm test
 
       - name: List files in coverage directory
         run: ls ./server
