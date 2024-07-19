@@ -84,10 +84,17 @@ jobs:
           CODE_SMELLS=$(cat ./sonar-metrics.json | jq -r '.component.measures[] | select(.metric == "code_smells").value')
           echo "# of code smells = ${CODE_SMELLS}"
           [ ${CODE_SMELLS} -lt "10" ]
-           
+
       - name: Check Sonar Metrics - Duplications
         run: |
           echo "Checking for duplications in Sonar Metrics JSON"
           DUPLICATIONS=$(cat ./sonar-metrics.json | jq -r '.component.measures[] | select(.metric == "duplicated_lines_density").value')
           echo "Duplicated lines density = ${DUPLICATIONS}"
           [ $(echo "${DUPLICATIONS} < 5.0" | bc) -eq 1 ]
+
+      - name: Check Sonar Metrics - Coverage
+        run: |
+          echo "Checking for coverage in Sonar Metrics JSON"
+          COVERAGE=$(cat ./sonar-metrics.json | jq -r '.component.measures[] | select(.metric == "coverage").value')
+          echo "Coverage = ${COVERAGE}%"
+          [ $(echo "${COVERAGE} >= 80.0" | bc) -eq 1 ]
