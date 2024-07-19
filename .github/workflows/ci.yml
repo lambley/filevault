@@ -63,7 +63,7 @@ jobs:
       - name: Check Coverage
         id: coverage
         run: |
-          COVERAGE_FILE='coverage/coverage-summary.json'
+          COVERAGE_FILE='${{ matrix.path }}/coverage/coverage-summary.json'
           COVERAGE_PCT=$(jq '.total.lines.pct' $COVERAGE_FILE)
 
           echo "Coverage Percentage: $COVERAGE_PCT"
