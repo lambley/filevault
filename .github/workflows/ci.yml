@@ -61,7 +61,7 @@ jobs:
           npm test -- --coverage
 
       - name: List files in coverage directory
-        run: ls -la server/coverage/
+        run: ls -la
 
       - name: Check Coverage
         id: coverage
