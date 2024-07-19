@@ -59,3 +59,14 @@ jobs:
         run: |
           cd ${{ matrix.path }}
           npm test
+
+  Sonarless-Scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Solarless Scan
+        uses: gitricko/sonarless@v1.2
+        with:
+          sonar-source-path: "['server', 'client']"
