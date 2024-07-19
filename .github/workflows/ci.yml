@@ -69,12 +69,14 @@ jobs:
       - name: Solarless Scan
         uses: gitricko/sonarless@v1.2
         with:
-          sonar-source-path: "['server', 'client']"
-          sonar-metrics-path: "./sonar-metrics.json"
+          sonar-source-path: |
+            server
+            client
+          sonar-metrics-path: './sonar-metrics.json'
 
       - name: Check Sonar Metrics - No Vulnerabilities
         run: |
           echo "Checking for any vulnerabilities in Sonar Metrics JSON"
           VULN=$(cat ./sonar-metrics.json | jq -r '.component.measures[] | select(.metric == "vulnerabilities").value')
           echo "# of vulnerabilities = ${VULN}"
-          [ ${VULN} -eq "0"]
+          [ ${VULN} -eq "0" ]
