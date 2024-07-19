@@ -60,11 +60,20 @@ jobs:
           cd ${{ matrix.path }}
           npm test -- --coverage
 
-      - name: Check coverage percentage
+      - name: Check Coverage
+        id: coverage
         run: |
-          COVERAGE=$(grep -Po '"coveragePercent": *\K[0-9.]+' coverage/coverage-summary.json)
-          echo "Coverage percentage = ${COVERAGE}"
-          [ $(echo "${COVERAGE} >= 80" | bc) -eq 1 ]
+          COVERAGE_FILE='coverage/coverage-summary.json'
+          COVERAGE_PCT=$(jq '.total.lines.pct' $COVERAGE_FILE)
+
+          echo "Coverage Percentage: $COVERAGE_PCT"
+
+          THRESHOLD=80.0
+
+          if (( $(echo "$COVERAGE_PCT < $THRESHOLD" | bc -l) )); then
+            echo "Coverage percentage $COVERAGE_PCT is below the threshold of $THRESHOLD"
+            exit 1
+          fi
 
   Sonarless-Scan:
     runs-on: ubuntu-latest
