@@ -60,6 +60,9 @@ jobs:
           cd ${{ matrix.path }}
           npm test -- --coverage
 
+      - name: List files in coverage directory
+        run: ls -la server/coverage/
+
       - name: Check Coverage
         id: coverage
         run: |
