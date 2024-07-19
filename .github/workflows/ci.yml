@@ -69,9 +69,6 @@ jobs:
       - name: Solarless Scan
         uses: gitricko/sonarless@v1.2
         with:
-          sonar-source-path: |
-            server
-            client
           sonar-metrics-path: './sonar-metrics.json'
 
       - name: Check Sonar Metrics - No Vulnerabilities
