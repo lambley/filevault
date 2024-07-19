@@ -55,10 +55,16 @@ jobs:
           cd ${{ matrix.path }}
           npm ci
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
           cd ${{ matrix.path }}
-          npm test
+          npm test -- --coverage
+
+      - name: Check coverage percentage
+        run: |
+          COVERAGE=$(grep -Po '"coveragePercent": *\K[0-9.]+' coverage/coverage-summary.json)
+          echo "Coverage percentage = ${COVERAGE}"
+          [ $(echo "${COVERAGE} >= 80" | bc) -eq 1 ]
 
   Sonarless-Scan:
     runs-on: ubuntu-latest
@@ -91,10 +97,3 @@ jobs:
           DUPLICATIONS=$(cat ./sonar-metrics.json | jq -r '.component.measures[] | select(.metric == "duplicated_lines_density").value')
           echo "Duplicated lines density = ${DUPLICATIONS}"
           [ $(echo "${DUPLICATIONS} < 5.0" | bc) -eq 1 ]
-
-      - name: Check Sonar Metrics - Coverage
-        run: |
-          echo "Checking for coverage in Sonar Metrics JSON"
-          COVERAGE=$(cat ./sonar-metrics.json | jq -r '.component.measures[] | select(.metric == "coverage").value')
-          echo "Coverage = ${COVERAGE}%"
-          [ $(echo "${COVERAGE} >= 80.0" | bc) -eq 1 ]
