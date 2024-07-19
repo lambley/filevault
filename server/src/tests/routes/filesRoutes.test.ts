@@ -4,7 +4,7 @@ import express from 'express';
 import filesRoutes from '../../routes/filesRoutes';
 import path from 'path';
 import * as fs from 'fs';
-import { FileMetadata } from '@shared/types/files';
+import { FileMetadata } from '../../../types/files';
 
 const app = express();
 app.use(express.json());

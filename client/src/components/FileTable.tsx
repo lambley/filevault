@@ -18,7 +18,7 @@ const FileTable: React.FC<Props> = ({ files, deleteFile }) => {
           </tr>
         </thead>
         <tbody>
-          {files.map(file => (
+          {files.map((file) => (
             <tr key={file.key}>
               <td>{file.name}</td>
               <td>{file.key}</td>

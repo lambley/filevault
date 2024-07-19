@@ -10,9 +10,20 @@
     "test": "concurrently \"npm run test:client\" \"npm run test:server\"",
     "test:watch:client": "cd client && npm run test:watch",
     "test:watch:server": "cd server && npm run test:watch",
-    "test:watch": "concurrently \"npm run test:watch:client\" \"npm run test:watch:server\""
+    "test:watch": "concurrently \"npm run test:watch:client\" \"npm run test:watch:server\"",
+    "lint:server": "cd server && npm run lint",
+    "lint:client": "cd client && npm run lint",
+    "lint": "npm run lint:server && npm run lint:client",
+    "format:server": "prettier --write 'server/**/*.js' 'server/**/*.ts'",
+    "format:client": "prettier --write 'client/**/*.js' 'client/**/*.ts' 'client/**/*.tsx'",
+    "format": "npm run format:server && npm run format:client"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@typescript-eslint/eslint-plugin": "^7.16.1",
+    "@typescript-eslint/parser": "^7.16.1",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.4",
+    "prettier": "^3.3.3"
   }
 }

@@ -9,8 +9,3 @@ dist/
 # Ignore logs and temporary files
 *.log
 *.tmp
-
-# Ignore test files and directories
-**/*.test.ts
-**/__tests__/
-

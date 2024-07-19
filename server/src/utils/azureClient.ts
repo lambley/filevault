@@ -1,9 +1,5 @@
-import {
-  BlobServiceClient,
-  StorageSharedKeyCredential,
-  ContainerClient,
-} from "@azure/storage-blob";
-import dotenv from "dotenv";
+import { BlobServiceClient, StorageSharedKeyCredential, ContainerClient } from '@azure/storage-blob';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -17,7 +13,7 @@ class AzureBlobService {
   constructor(
     accountName: string = process.env.AZURE_STORAGE_ACCOUNT_NAME!,
     accountKey: string = process.env.AZURE_STORAGE_ACCOUNT_KEY!,
-    containerName: string = process.env.AZURE_CONTAINER_NAME!
+    containerName: string = process.env.AZURE_CONTAINER_NAME!,
   ) {
     this.accountName = accountName;
     this.accountKey = accountKey;
@@ -26,25 +22,20 @@ class AzureBlobService {
 
   public async initialize() {
     try {
-      const sharedKeyCredential = new StorageSharedKeyCredential(
-        this.accountName,
-        this.accountKey
-      );
+      const sharedKeyCredential = new StorageSharedKeyCredential(this.accountName, this.accountKey);
 
       this.blobServiceClient = new BlobServiceClient(
         `https://${this.accountName}.blob.core.windows.net`,
-        sharedKeyCredential
+        sharedKeyCredential,
       );
 
       await this.listContainers();
 
-      this.containerClient = this.blobServiceClient.getContainerClient(
-        this.containerName
-      );
+      this.containerClient = this.blobServiceClient.getContainerClient(this.containerName);
 
-      console.log("Azure client initialized successfully.");
+      console.log('Azure client initialized successfully.');
     } catch (error) {
-      console.error("Failed to initialize Azure client:", error);
+      console.error('Failed to initialize Azure client:', error);
       this.blobServiceClient = null;
       this.containerClient = null;
       throw error;
@@ -56,11 +47,11 @@ class AzureBlobService {
       if (this.blobServiceClient) {
         const iter = this.blobServiceClient.listContainers();
         for await (const container of iter) {
-          console.log("Container:", container.name);
+          console.log('Container:', container.name);
         }
       }
     } catch (error) {
-      console.error("Error validating Azure connection:", error);
+      console.error('Error validating Azure connection:', error);
       throw error;
     }
   }
@@ -76,7 +67,7 @@ class AzureBlobService {
 
 const azureBlobService = new AzureBlobService();
 azureBlobService.initialize().catch((error) => {
-  console.error("Azure client initialization error:", error);
+  console.error('Azure client initialization error:', error);
 });
 
 export default azureBlobService;

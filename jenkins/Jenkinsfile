@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    stages {
+        stage('Lint Server') {
+            steps {
+                script {
+                    echo "Linting server"
+                    sh 'docker exec -w /app/server filevault-server-1 npm run lint'
+                }
+            }
+        }
+        stage('Lint Client') {
+            steps {
+                script {
+                    echo "Linting client"
+                    sh 'docker exec -w /app/client filevault-client-1 npm run lint'
+                }
+            }
+        }
+        stage('Test Server') {
+            steps {
+                script {
+                    echo "Testing server"
+                    sh 'docker exec -w /app/server filevault-server-1 npm run test'
+                }
+            }
+        }
+        stage('Test Client') {
+            steps {
+                script {
+                    echo "Testing client"
+                    sh 'docker exec -w /app/client filevault-client-1 npm run test'
+                }
+            }
+        }
+    }
+}
