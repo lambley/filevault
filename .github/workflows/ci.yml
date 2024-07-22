@@ -37,10 +37,6 @@ jobs:
     name: Prettier
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        path: [client, server]
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,12 +48,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd ${{ matrix.path }}
           npm ci
 
       - name: Run Prettier check
         run: |
-          cd ${{ matrix.path }}
           npm run format:check
 
   test:
