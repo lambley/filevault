@@ -66,7 +66,7 @@ Before running the application, ensure you have the following installed:
     npm run start
     ```
 
-### Starting with Docker
+## Starting with Docker
 
 - There are 3 docker images:
   - Server - NodeJS/TS API
@@ -80,3 +80,27 @@ docker-compose up --build
 ```
 
 To access Jenkins, you would need to follow some setup. See their official docs [ [linux](https://www.jenkins.io/doc/book/installing/linux/) | [mac](https://www.jenkins.io/doc/book/installing/macos/) ].
+
+## Azure Container Registry Notes
+
+### CI
+
+The CI workflow runs all the checks and tests on PR to ensure stable code is pushed to deployments (or ACR in this case, for now).
+
+### CD
+
+The CD workflow pushes the stable, tested images to `filevault` container registry
+
+>Note about creating Azure Service Principal and Azure Credentials:
+- create a service principal with this command:
+```bash
+az ad sp create-for-rbac \
+    --name "github-actions-push" \
+    --role contributor \
+    --scopes /subscriptions/YOUR_SUBSCRIPTION_ID/resourceGroups/YOUR_RESOURCE_GROUP \
+    --sdk-auth
+```
+- `--name "github-actions-push"`: Specifies the name of the service principal.
+- `--role contributor`: Assigns a role to the service principal. The contributor role is a built-in role in Azure that allows full access to manage all Azure resources but does not allow you to grant access to others.
+- `--scopes /subscriptions/YOUR_SUBSCRIPTION_ID/resourceGroups/YOUR_RESOURCE_GROUP`: The scope defines the level of access and the specific resources that the service principal can manage.
+- `--sdk-auth`: This flag outputs the credentials in a JSON format suitable for use with Azure SDKs and tools like GitHub Actions. For development purposes only - don't share the output!
