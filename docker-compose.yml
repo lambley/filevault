@@ -24,25 +24,25 @@ services:
     networks:
       - filevault_network
 
-  jenkins:
-    build:
-      context: ./jenkins
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-    volumes:
-      - jenkins_home:/var/jenkins_home
-      - ./jenkins:/var/jenkins_home/jenkins
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - server
-      - client
-    networks:
-      - filevault_network
+#   jenkins:
+#     build:
+#       context: ./jenkins
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8080:8080"
+#       - "50000:50000"
+#     volumes:
+#       - jenkins_home:/var/jenkins_home
+#       - ./jenkins:/var/jenkins_home/jenkins
+#       - /var/run/docker.sock:/var/run/docker.sock
+#     depends_on:
+#       - server
+#       - client
+#     networks:
+#       - filevault_network
 
-volumes:
-  jenkins_home:
+# volumes:
+#   jenkins_home:
 
 networks:
   filevault_network:

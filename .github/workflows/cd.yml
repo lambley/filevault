@@ -1,0 +1,39 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: az acr login --name filevault
+
+    - name: Build and push server image
+      run: |
+        docker build -t server:latest ./server
+        docker tag server:latest filevault.azurecr.io/server:latest
+        docker push filevault.azurecr.io/server:latest
+
+    - name: Build and push client image
+      run: |
+        docker build -t client:latest ./client
+        docker tag client:latest filevault.azurecr.io/client:latest
+        docker push filevault.azurecr.io/client:latest
