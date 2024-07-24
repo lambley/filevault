@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-  # added for testing - remove when successful
-  pull_request:
-    branches:
-      - '*'
 
 jobs:
   build-and-deploy:
