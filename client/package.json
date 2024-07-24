@@ -17,7 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --silent --detectOpenHandles",
+    "test": "jest --silent --detectOpenHandles --coverage",
     "test:watch": "jest --watch",
     "eject": "react-scripts eject",
     "lint": "eslint"

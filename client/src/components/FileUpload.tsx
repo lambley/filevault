@@ -21,6 +21,8 @@ const FileUpload: React.FC = () => {
     }
   };
 
+  // temporarily ignore handle submit until refactored and Azure setup complete
+  /* istanbul ignore next */
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 

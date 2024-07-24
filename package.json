@@ -16,7 +16,10 @@
     "lint": "npm run lint:server && npm run lint:client",
     "format:server": "prettier --write 'server/**/*.js' 'server/**/*.ts'",
     "format:client": "prettier --write 'client/**/*.js' 'client/**/*.ts' 'client/**/*.tsx'",
-    "format": "npm run format:server && npm run format:client"
+    "format": "npm run format:server && npm run format:client",
+    "format:check:server": "prettier --check 'server/**/*.js' 'server/**/*.ts'",
+    "format:check:client": "prettier --check 'client/**/*.js' 'client/**/*.ts' 'client/**/*.tsx'",
+    "format:check": "npm run format:check:server && npm run format:check:client"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.16.1",
