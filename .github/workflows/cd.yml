@@ -42,17 +42,25 @@ jobs:
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/client:latest
 
 
-      # FOR FUTURE USE AND DEPLOYMENTS
-      # reference: https://learn.microsoft.com/en-us/azure/container-instances/container-instances-github-action
-      # # Deploy to Azure Container Instances (only on main branch)
-      # - name: Deploy to Azure Container Instances
-      #   uses: azure/aci-deploy@v1
-      #   with:
-      #     resource-group: ${{ secrets.RESOURCE_GROUP }}
-      #     dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
-      #     image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
-      #     registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-      #     registry-username: ${{ secrets.REGISTRY_USERNAME }}
-      #     registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-      #     name: aci-sampleapp
-      #     location: 'westus'
+      # Set up kubectl (the Kubernetes CLI)
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      # Set up AKS credentials
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }}
+
+      # Deploy server to AKS
+      - name: Deploy server to AKS
+        run: |
+          kubectl set image deployment/server-deployment server=${{ secrets.REGISTRY_LOGIN_SERVER }}/server:latest
+          kubectl rollout status deployment/server-deployment
+
+      # Deploy client to AKS
+      - name: Deploy client to AKS
+        run: |
+          kubectl set image deployment/client-deployment client=${{ secrets.REGISTRY_LOGIN_SERVER }}/client:latest
+          kubectl rollout status deployment/client-deployment
