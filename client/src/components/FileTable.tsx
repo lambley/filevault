@@ -14,6 +14,8 @@ const FileTable: React.FC<Props> = ({ files, deleteFile }) => {
           <tr>
             <th>Name</th>
             <th>File Key</th>
+            <th>Size (Bytes)</th>
+            <th>URL</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -22,6 +24,16 @@ const FileTable: React.FC<Props> = ({ files, deleteFile }) => {
             <tr key={file.key}>
               <td>{file.name}</td>
               <td>{file.key}</td>
+              <td>{file.size ?? 'Unknown'}</td>
+              <td>
+                {file.url ? (
+                  <a href={file.url} target="_blank" rel="noopener noreferrer">
+                    Download
+                  </a>
+                ) : (
+                  'Unavailable'
+                )}
+              </td>
               <td>
                 <button onClick={() => deleteFile(file.key)}>Delete</button>
               </td>
