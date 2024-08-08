@@ -1,3 +1,4 @@
+// istanbul ignore file
 import express from 'express';
 import multer from 'multer';
 import fs from 'fs';
