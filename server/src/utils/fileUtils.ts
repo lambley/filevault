@@ -2,7 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { FileMetadata } from '../../types/files';
 
-const filesDataPath = path.join(__dirname, '../filesData.json');
+const jsonFileName = process.env.DATA_STORE_JSON || 'filesData';
+
+const filesDataPath = path.join(__dirname, `../${jsonFileName}.json`);
 
 const loadFilesData = (): FileMetadata[] => {
   if (fs.existsSync(filesDataPath)) {
