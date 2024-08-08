@@ -8,8 +8,6 @@ import { FileMetadata } from '../../types/files';
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
-const files: FileMetadata[] = loadFilesData();
-
 router.post('/', upload.single('file'), async (req, res) => {
   const fileName = req.body.note as string;
   if (!fileName) {
@@ -24,13 +22,27 @@ router.post('/', upload.single('file'), async (req, res) => {
         throw new Error('Container client not initialized.');
       }
 
-      const blobName = req.file.filename;
+      const blobName = fileName;
       const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
       await blockBlobClient.uploadFile(req.file.path);
       fs.unlinkSync(req.file.path);
 
-      files.push({ name: fileName, key: blobName });
+      // Create new file metadata
+      const newFileMetadata: FileMetadata = {
+        name: fileName,
+        key: blobName,
+        url: `${containerClient.url}/${blobName}`,
+        size: req.file.size,
+      };
+
+      // Load existing files metadata
+      const files = loadFilesData();
+
+      // Update metadata
+      files.push(newFileMetadata);
+
+      // Save updated metadata to JSON file
       saveFilesData(files);
 
       res.status(200).send('File uploaded successfully.');

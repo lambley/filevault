@@ -11,16 +11,24 @@ class AzureBlobService {
   private containerName: string;
 
   constructor(
-    accountName: string = process.env.AZURE_STORAGE_ACCOUNT_NAME!,
-    accountKey: string = process.env.AZURE_STORAGE_ACCOUNT_KEY!,
-    containerName: string = process.env.AZURE_CONTAINER_NAME!,
+    accountName: string = process.env.AZURE_STORAGE_ACCOUNT_NAME || '',
+    accountKey: string = process.env.AZURE_STORAGE_ACCOUNT_KEY || '',
+    containerName: string = process.env.AZURE_CONTAINER_NAME || '',
   ) {
     this.accountName = accountName;
     this.accountKey = accountKey;
     this.containerName = containerName;
   }
 
-  public async initialize() {
+  public async initialize(): Promise<void> {
+    // Check if environment variables are set
+    if (!this.accountName || !this.accountKey || !this.containerName) {
+      console.error('Azure Blob Service credentials are missing.');
+      this.blobServiceClient = null;
+      this.containerClient = null;
+      return;
+    }
+
     try {
       const sharedKeyCredential = new StorageSharedKeyCredential(this.accountName, this.accountKey);
 
@@ -38,11 +46,11 @@ class AzureBlobService {
       console.error('Failed to initialize Azure client:', error);
       this.blobServiceClient = null;
       this.containerClient = null;
-      throw error;
+      throw new Error('Azure Blob Service initialization failed.');
     }
   }
 
-  private async listContainers() {
+  private async listContainers(): Promise<void> {
     try {
       if (this.blobServiceClient) {
         const iter = this.blobServiceClient.listContainers();
@@ -52,7 +60,7 @@ class AzureBlobService {
       }
     } catch (error) {
       console.error('Error validating Azure connection:', error);
-      throw error;
+      throw new Error('Error validating Azure connection.');
     }
   }
 
@@ -67,7 +75,7 @@ class AzureBlobService {
 
 const azureBlobService = new AzureBlobService();
 azureBlobService.initialize().catch((error) => {
-  console.error('Azure client initialization error:', error);
+  console.error('Azure client initialization error:', error.message);
 });
 
 export default azureBlobService;
